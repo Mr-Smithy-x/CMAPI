@@ -38,8 +38,11 @@ class CMAPI : protected PS3Client{
     Response GetServerMaxVersion();
     Response GetCoreMinVersion();
     Response GetCoreMaxVersion();
-
-    void getMemory(int process, int address, unsigned char &memory);
+    Response PS3RemoveHook();
+    Response PS3GetName(int process);
+    Response PS3GetAllPid();
+    void PS3GetMemory(int process, int address, unsigned char* &memory);
+    void PS3SetMemory(int process, int address, unsigned char* bytes);
     const char * request(const char *string);
 
 private:
@@ -48,11 +51,6 @@ private:
     void parseResponseCode(string content, string *response, PS3MAPI_RESPONSECODE *responsecode);
     void setBinaryMode(bool mode);
 
-    Response PS3RemoveHook();
-
-    Response PS3GetName(int process);
-
-    Response PS3GetAllPid();
 };
 
 

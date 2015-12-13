@@ -99,11 +99,18 @@ bool CMAPI::Disconnect() {
     return disconnect();
 }
 
-void CMAPI::getMemory(int process, int address, unsigned char &memory) {
-    string a("PROCESS GETMEMORY " + std::to_string(process) + " " + std::to_string(address));
-    if(sendData(a.c_str())){
+void CMAPI::PS3GetMemory(int process, int address, unsigned char* &memory) {
+    char* cmd = "PROCESS GETMEMORY ";
+    strcat(cmd, std::to_string(process).c_str());
+    strcat(cmd, " ");
+    strcat(cmd, std::to_string(address).c_str());
+    if(sendData(cmd)){
 
     }
+}
+
+void CMAPI::PS3SetMemory(int process, int address, unsigned char* bytes) {
+
 }
 
 Response CMAPI::PS3Shutdown() {

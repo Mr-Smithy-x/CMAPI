@@ -19,7 +19,7 @@ const char*CMAPI::request(const char *str) {
     ConnectIt();
     std::string a = "GET /";
     a += str;
-    a += " HTTP/1.1\r\nHOST: 98.113.98.224\r\nConnection: close\r\n";
+    a += " HTTP/1.1\r\nHOST: ip \r\nConnection: close\r\n";
     const char* k = nullptr;
     if(sendData(a.c_str())){
         cout << "Sent" << endl;

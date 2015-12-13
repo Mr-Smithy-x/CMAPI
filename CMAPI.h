@@ -4,6 +4,8 @@
 
 #ifndef CLIENT_JMAPI_H
 #define CLIENT_JMAPI_H
+
+#include <sstream>
 #include "ps3utils/enums.h"
 #include "ps3utils/Response.h"
 #include "ps3utils/PS3Client.h"
@@ -14,15 +16,30 @@ class CMAPI : protected PS3Client{
     bool Disconnect();
     bool ConnectIt();
     Response PS3Reboot();
+    Response PS3SoftReboot();
+    Response PS3HardReboot();
     Response PS3Shutdown();
     Response PS3GetFwVersion();
     Response PS3GetFwType();
-    Response PS3DisableSysCall();
-    Response PS3CheckSysCall();
+    Response PS3Notify(char *msg);
     Response PS3ParialCheckSysCall();
     Response PS3DeleteHistory();
-    void getMemory(int process, int address, unsigned char &memory);
+    Response PS3Buzzer(BUZZER buzzer);
+    Response PS3Led(LEDCOLOR color, LEDMODE mode);
+    Response PS3DisableSysCall(SYSCALL8MODE syscall8MODE);
+    Response PS3CheckSysCall(int mode);
+    Response PS3ParialDisableSysCall(int mode);
+    Response PS3GetTemperature();
+    Response PS3GetIdps();
+    Response PS3GetPsid();
+    Response PS3SetIdps(char *idps);
+    Response PS3SetPsid(char *psid);
+    Response GetServerMinVersion();
+    Response GetServerMaxVersion();
+    Response GetCoreMinVersion();
+    Response GetCoreMaxVersion();
 
+    void getMemory(int process, int address, unsigned char &memory);
     const char * request(const char *string);
 
 private:
@@ -31,6 +48,11 @@ private:
     void parseResponseCode(string content, string *response, PS3MAPI_RESPONSECODE *responsecode);
     void setBinaryMode(bool mode);
 
+    Response PS3RemoveHook();
+
+    Response PS3GetName(int process);
+
+    Response PS3GetAllPid();
 };
 
 

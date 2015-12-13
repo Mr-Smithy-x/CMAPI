@@ -38,8 +38,6 @@ public:
     void CloseDataSocket();
     void ConnectDataSocket();
     void OpenDataSocket();
-
-
 };
 
 

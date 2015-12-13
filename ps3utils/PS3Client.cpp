@@ -8,6 +8,7 @@ using namespace std;
 
 #include <string>
 #include <string.h>
+#include <iostream>
 #include "PS3Client.h"
 
 bool PS3Client::createSocket() {
@@ -17,7 +18,6 @@ bool PS3Client::createSocket() {
         close(sock);
         return false;
     }
-    printf("Created");
    return true;
 }
 
@@ -47,7 +47,6 @@ bool PS3Client::sConnect() {
         perror("connect failed");
         return false;
     }
-    printf("Connected");
     return true;
 }
 
@@ -59,6 +58,7 @@ void PS3Client::init(char *ip, int port) {
 }
 
 bool PS3Client::sendData(const char *DATA) {
+    cout << DATA << endl;
     if(send(sock, DATA, sizeof(DATA),0) < 0){
         perror("send failed");
         return false;
@@ -67,7 +67,7 @@ bool PS3Client::sendData(const char *DATA) {
 }
 
 char* PS3Client::recvData() {
-    char buffer[1024];
+    char buffer[512];
     if(recv(sock,&buffer, sizeof(buffer),0) < 0){
         perror("recv failed");
     }
@@ -77,8 +77,6 @@ char* PS3Client::recvData() {
 PS3Client::PS3Client( char* ip, int port) {
     this->ip = ip;
     this->port = port;
-    printf(this->ip);
-    printf(":%i", this->port);
     createSocket();
 }
 

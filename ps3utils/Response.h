@@ -11,11 +11,11 @@ using namespace std;
 
 class Response {
     PS3MAPI_RESPONSECODE responsecode;
-    std::string response;
+    const char *response;
 public:
-    Response(PS3MAPI_RESPONSECODE responsecode, std::string response);
+    Response(PS3MAPI_RESPONSECODE responsecode, const char *response);
     PS3MAPI_RESPONSECODE getResponseCode();
-    std::string getResponse();
+    const char * getResponse();
 };
 
 

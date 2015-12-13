@@ -4,7 +4,7 @@
 
 #include "Response.h"
 
-Response::Response(PS3MAPI_RESPONSECODE responsecode, std::string response) {
+Response::Response(PS3MAPI_RESPONSECODE responsecode, const char *response) {
     this->responsecode = responsecode;
     this->response = response;
 }
@@ -13,6 +13,6 @@ PS3MAPI_RESPONSECODE Response::getResponseCode() {
     return this->responsecode;
 }
 
-std::string Response::getResponse() {
+const char * Response::getResponse() {
     return this->response;
 }

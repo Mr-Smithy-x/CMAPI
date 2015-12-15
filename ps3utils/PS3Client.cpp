@@ -92,3 +92,21 @@ bool PS3Client::disconnect() {
     }
     return false;
 }
+//From JMAPI
+/*
+protected void OpenDataSocket() throws IOException, JMAPIException {
+            String[] split = pav.getResponse().substring(start, end).split(",");
+            String ip = String.format("%s.%s.%s.%s", split[0], split[1], split[2], split[3]);
+            int port = (Integer.valueOf(split[4]) << 8) + (Integer.valueOf(split[5]));
+            data_sock = new Socket();
+            data_sock.connect(new InetSocketAddress(ip, port));
+}*/
+
+void PS3Client::OpenDataSocket() {
+    if(sendData("PASV")){
+        string res = recvData();
+        int start = res.find("(")+1;
+        int end = res.find(")");
+        string substr = res.substr(start,end-start);
+    }
+}

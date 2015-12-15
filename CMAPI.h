@@ -48,7 +48,9 @@ class CMAPI : protected PS3Client{
 private:
     char *ip;
     int port;
+    Response doCommand(char* cmd);
     void parseResponseCode(string content, string *response, PS3MAPI_RESPONSECODE *responsecode);
+
     void setBinaryMode(bool mode);
 
 };

@@ -99,7 +99,23 @@ bool CMAPI::Disconnect() {
     return disconnect();
 }
 
+
+Response CMAPI::doCommand(char *cmd) {
+    if(sendData(cmd)){
+        string response;
+        PS3MAPI_RESPONSECODE responsecode;
+        string content(recvData());
+        parseResponseCode(content, &response, &responsecode);
+        return Response(responsecode, response.c_str());
+    }
+    return Response(FAIL, "Error");
+}
+
+
+//Not completed
 void CMAPI::PS3GetMemory(int process, int address, unsigned char* &memory) {
+    this->setBinaryMode(true);
+
     char* cmd = "PROCESS GETMEMORY ";
     strcat(cmd, std::to_string(process).c_str());
     strcat(cmd, " ");
@@ -107,6 +123,7 @@ void CMAPI::PS3GetMemory(int process, int address, unsigned char* &memory) {
     if(sendData(cmd)){
 
     }
+    this->setBinaryMode(false);
 }
 
 void CMAPI::PS3SetMemory(int process, int address, unsigned char* bytes) {
@@ -114,68 +131,33 @@ void CMAPI::PS3SetMemory(int process, int address, unsigned char* bytes) {
 }
 
 Response CMAPI::PS3Shutdown() {
-    if(sendData("PS3 SHUTDOWN")){
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(recvData());
-        parseResponseCode(content, &response, &responsecode);
-        disconnect();
-        return Response(responsecode, response.c_str());
-    }
+    Response r = doCommand("PS3 SHUTDOWN");
+    disconnect();
+    return r;
 }
 
 Response CMAPI::PS3Reboot() {
-    if(sendData("PS3 REBOOT")){
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(recvData());
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 REBOOT");
 }
 
 Response CMAPI::PS3SoftReboot() {
-    if(sendData("PS3 SOFTREBOOT")){
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(recvData());
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 SOFTREBOOT");
 }
 
 Response CMAPI::PS3HardReboot() {
-    if(sendData("PS3 HARDREBOOT")){
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(recvData());
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 HARDREBOOT");
 }
 
 Response CMAPI::PS3Notify(char* msg) {
     char* cmd = "PS3 NOTIFY ";
     strcat(cmd, msg);
-    if(sendData(cmd)){
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(recvData());
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 
 Response CMAPI::PS3Buzzer(BUZZER buzzer) {
     char* cmd = "PS3 BUZZER";
     strcat(cmd, std::to_string(buzzer).c_str());
-    if(sendData(cmd)){
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(recvData());
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 
 Response CMAPI::PS3Led(LEDCOLOR color, LEDMODE mode) {
@@ -183,170 +165,60 @@ Response CMAPI::PS3Led(LEDCOLOR color, LEDMODE mode) {
     strcat(cmd, std::to_string(color).c_str());
     strcat(cmd, " ");
     strcat(cmd, std::to_string(mode).c_str());
-    if(sendData(cmd)){
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(recvData());
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 
 Response CMAPI::PS3GetFwType() {
-    if(sendData("PS3 GETFWTYPE")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 GETFWTYPE");
 }
 
 Response CMAPI::PS3GetFwVersion() {
-    if(sendData("PS3 GETFWVERSION")){
-        const char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 GETFWVERSION");
 }
 
 Response CMAPI::PS3DisableSysCall(SYSCALL8MODE syscall8MODE) {
     char* cmd = "PS3 DISABLESYSCALL ";
     strcat(cmd, std::to_string(syscall8MODE).c_str());
-    if(sendData(cmd)){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 
 Response CMAPI::PS3CheckSysCall(int mode) {
     char* cmd = "PS3 CHECKSYSCALL ";
     strcat(cmd, std::to_string(mode).c_str());
-    if(sendData(cmd)){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 
 Response CMAPI::PS3ParialCheckSysCall() {
-    if(sendData("PS3 PCHECKSYSCALL8")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 PCHECKSYSCALL8");
 }
 
 Response CMAPI::PS3ParialDisableSysCall(int mode) {
     char* cmd = "PS3 PDISABLESYSCALL8 ";
     strcat(cmd, std::to_string(mode).c_str());
-    if(sendData(cmd)){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 
 Response CMAPI::GetServerMinVersion() {
-    if(sendData("SERVER GETMINVERSION")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("SERVER GETMINVERSION");
 }
 Response CMAPI::GetServerMaxVersion() {
-    if(sendData("SERVER GETVERSION")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("SERVER GETVERSION");
 }
 Response CMAPI::GetCoreMinVersion() {
-    if(sendData("CORE GETMINVERSION")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return  doCommand("CORE GETMINVERSION");
 }
 Response CMAPI::GetCoreMaxVersion() {
-    if(sendData("CORE GETVERSION")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("CORE GETVERSION");
 }
 
 Response CMAPI::PS3GetTemperature() /*cpu|rsx*/ {
-    if(sendData("PS3 GETTEMP")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 GETTEMP");
 }
 Response CMAPI::PS3GetIdps() {
-    if(sendData("PS3 GETIDPS")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 GETIDPS");
 }
 Response CMAPI::PS3GetPsid() {
-    if(sendData("PS3 GETPSID")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 GETPSID");
 }
 Response CMAPI::PS3SetIdps(char* idps) /*0-16, 16-32*/ {
     if(strlen(idps) != 32){
@@ -356,15 +228,7 @@ Response CMAPI::PS3SetIdps(char* idps) /*0-16, 16-32*/ {
     strcat(cmd, string(idps).substr(0, 16).c_str());
     strcat(cmd, " ");
     strcat(cmd, string(idps).substr(16,32).c_str());
-    if(sendData(cmd)){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 Response CMAPI::PS3SetPsid(char* psid) /*0-16, 16-32*/ {
     if(strlen(psid) != 32){
@@ -374,62 +238,21 @@ Response CMAPI::PS3SetPsid(char* psid) /*0-16, 16-32*/ {
     strcat(cmd, string(psid).substr(0, 16).c_str());
     strcat(cmd, " ");
     strcat(cmd, string(psid).substr(16,32).c_str());
-
-    if(sendData(cmd)){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 Response CMAPI::PS3DeleteHistory() {
-    if(sendData("PS3 DELHISTORY")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 DELHISTORY");
 }
 Response CMAPI::PS3RemoveHook(){
-    if(sendData("PS3 REMOVEHOOK")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 REMOVEHOOK");
 }
 Response CMAPI::PS3GetName(int process){
     char* cmd = "PS3 GETNAME ";
     strcat(cmd, std::to_string(process).c_str());
-    if(sendData(cmd)){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand(cmd);
 }
 Response CMAPI::PS3GetAllPid() /*split by |*/{
-    if(sendData("PS3 GETALLPID")){
-        char* b = recvData();
-        cout << b << endl;
-        string response;
-        PS3MAPI_RESPONSECODE responsecode;
-        string content(b);
-        parseResponseCode(content, &response, &responsecode);
-        return Response(responsecode, response.c_str());
-    }
+    return doCommand("PS3 GETALLPID");
 }
 
 void CMAPI::setBinaryMode(bool mode) {

@@ -227,7 +227,7 @@ Response CMAPI::PS3SetIdps(char* idps) /*0-16, 16-32*/ {
     char* cmd = "PS3 SETIDPS ";
     strcat(cmd, string(idps).substr(0, 16).c_str());
     strcat(cmd, " ");
-    strcat(cmd, string(idps).substr(16,32).c_str());
+    strcat(cmd, string(idps).substr(16,16).c_str());
     return doCommand(cmd);
 }
 Response CMAPI::PS3SetPsid(char* psid) /*0-16, 16-32*/ {
@@ -237,7 +237,7 @@ Response CMAPI::PS3SetPsid(char* psid) /*0-16, 16-32*/ {
     char* cmd = "PS3 SETPSID ";
     strcat(cmd, string(psid).substr(0, 16).c_str());
     strcat(cmd, " ");
-    strcat(cmd, string(psid).substr(16,32).c_str());
+    strcat(cmd, string(psid).substr(16,16).c_str());
     return doCommand(cmd);
 }
 Response CMAPI::PS3DeleteHistory() {
